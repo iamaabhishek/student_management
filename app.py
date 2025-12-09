@@ -9,24 +9,32 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
-class Todo(db.Model):
+class StuMa(db.Model):
     ID = db.Column(db.Integer, primary_key=True)
     NAME = db.Column(db.String(100), nullable=False)
-    EMAIL = db.Column(db.String(120), unique=True, nullable=False)
+    EMAIL = db.Column(db.String(120), unique=False, nullable=False)
     COURSE = db.Column(db.String(100), nullable=False)
 
-
+    def __repr__(self) -> str:          # This function show result in console
+        return f"{self.ID} - {self.NAME} - {self.EMAIL} - {self.COURSE}"
 
 
 # home page for student management
 @app.route("/")
-def hello_world():
-    return render_template('index.html')
+def addStudent():
+    # (Insert data for testing purpose)
+    student = StuMa(NAME="Ankit Yadav",EMAIL="Niketa@gmail.com",COURSE="BCA")
+    db.session.add(student)
+    db.session.commit()
+    allStudent = StuMa.query.all()
+    return render_template('index.html',allStudent = allStudent)
 
 
 
-@app.route("/products")
-def products():
+@app.route("/showStudent")
+def showStudent():
+    allStudent = StuMa.query.all()
+    print(allStudent)
     return "<p>Hello you are in product </p>"
 
 
