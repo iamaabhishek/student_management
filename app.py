@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template , request
 from flask_sqlalchemy import SQLAlchemy 
 
 app = Flask(__name__)
@@ -12,7 +12,7 @@ db = SQLAlchemy(app)
 class StuMa(db.Model):
     ID = db.Column(db.Integer, primary_key=True)
     NAME = db.Column(db.String(100), nullable=False)
-    EMAIL = db.Column(db.String(120), unique=False, nullable=False)
+    EMAIL = db.Column(db.String(120),  nullable=False)
     COURSE = db.Column(db.String(100), nullable=False)
 
     def __repr__(self) -> str:          # This function show result in console
@@ -20,12 +20,17 @@ class StuMa(db.Model):
 
 
 # home page for student management
-@app.route("/")
+@app.route("/",methods=['GET','POST'])
 def addStudent():
+    if request.method == 'POST': # Getting data from form
+        name = request.form['studentName']
+        email = request.form['exampleInputEmail']
+        course = request.form['course']    
     # (Insert data for testing purpose)
-    student = StuMa(NAME="Ankit Yadav",EMAIL="Niketa@gmail.com",COURSE="BCA")
-    db.session.add(student)
-    db.session.commit()
+        student = StuMa(NAME=name,EMAIL=email,COURSE=course)
+        db.session.add(student)
+        db.session.commit()
+         
     allStudent = StuMa.query.all()
     return render_template('index.html',allStudent = allStudent)
 
