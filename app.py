@@ -1,4 +1,4 @@
-from flask import Flask, render_template , request
+from flask import Flask, render_template , request ,redirect
 from flask_sqlalchemy import SQLAlchemy 
 
 app = Flask(__name__)
@@ -41,6 +41,23 @@ def showStudent():
     allStudent = StuMa.query.all()
     print(allStudent)
     return "<p>Hello you are in product </p>"
+
+
+@app.route("/delete/<int:ID>")
+def deleteStudent(ID):
+    Student = StuMa.query.filter_by(ID=ID).first()
+    db.session.delete(Student)
+    db.session.commit()
+    return redirect("/")
+   
+
+
+@app.route("/update/<int:ID>")
+def updateStudent(ID):
+    Student = StuMa.query.filter_by(ID=ID).first()
+    return render_template('update.html',Student=Student)
+   
+
 
 
 
