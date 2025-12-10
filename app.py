@@ -51,12 +51,19 @@ def deleteStudent(ID):
     return redirect("/")
    
 
-
-@app.route("/update/<int:ID>")
+@app.route("/update/<int:ID>", methods=['GET', 'POST'])
 def updateStudent(ID):
-    Student = StuMa.query.filter_by(ID=ID).first()
-    return render_template('update.html',Student=Student)
-   
+    student = StuMa.query.get_or_404(ID)
+
+    if request.method == "POST":
+        student.NAME = request.form['studentName']
+        student.EMAIL = request.form['exampleInputEmail']
+        student.COURSE = request.form['course']
+
+        db.session.commit()
+        return redirect("/")
+
+    return render_template('update.html', Student=student)
 
 
 
